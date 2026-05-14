@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>בונה ארוחות — אסף</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0c0c;
+    --card: #131313;
+    --border: #222;
+    --accent: #d4f53c;
+    --accent2: #f5a23c;
+    --accent3: #3cd4f5;
+    --accent4: #f53c8a;
+    --muted: #555;
+    --text: #f2f2f2;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Heebo', sans-serif;
+    padding-bottom: 120px;
+  }
+
+  .hero {
+    padding: 32px 16px 20px;
+    background: linear-gradient(180deg, #0f1f00 0%, var(--bg) 100%);
+    border-bottom: 1px solid #1a2a00;
+    text-align: center;
+  }
+  .hero h1 { font-size: 32px; font-weight: 900; letter-spacing: -1px; }
+  .hero h1 span { color: var(--accent); }
+  .hero-sub { font-size: 13px; color: var(--muted); margin-top: 6px; }
+
+  .targets {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .target { font-size: 12px; color: var(--muted); }
+  .target span { color: var(--text); font-weight: 700; }
+
+  /* STICKY BAR */
+  .sticky-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #0a1800;
+    border-bottom: 1px solid #1a3000;
+    padding: 10px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .bar-label { font-size: 10px; font-weight: 700; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
+  .bar-nums { display: flex; gap: 16px; align-items: center; }
+  .bar-kcal { font-size: 24px; font-weight: 900; letter-spacing: -1px; color: var(--accent); }
+  .bar-kcal.over { color: var(--accent4); }
+  .bar-target { font-size: 11px; color: var(--muted); }
+  .bar-macros { display: flex; gap: 12px; }
+  .bar-macro { font-size: 12px; color: var(--muted); }
+  .bar-macro span { font-weight: 700; }
+  .bar-macro.p span { color: var(--accent); }
+  .bar-macro.c span { color: var(--accent2); }
+  .bar-macro.f span { color: var(--accent3); }
+
+  /* PROGRESS BARS */
+  .progress-wrap { padding: 10px 16px 0; display: flex; gap: 8px; }
+  .prog-bar-wrap { flex: 1; }
+  .prog-label { font-size: 10px; color: var(--muted); margin-bottom: 3px; display: flex; justify-content: space-between; }
+  .prog-track { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .prog-fill { height: 100%; border-radius: 2px; transition: width 0.3s; }
+  .prog-fill.kcal { background: var(--accent); }
+  .prog-fill.prot { background: var(--accent); }
+  .prog-fill.carb { background: var(--accent2); }
+  .prog-fill.fat { background: var(--accent3); }
+  .prog-fill.over { background: var(--accent4); }
+
+  /* CONTENT */
+  .content { padding: 16px; }
+
+  /* CATEGORY */
+  .cat-section { margin-bottom: 24px; }
+  .cat-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .cat-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .cat-dot.protein { background: var(--accent); }
+  .cat-dot.carb { background: var(--accent2); }
+  .cat-dot.fat { background: var(--accent3); }
+  .cat-dot.veg { background: #3cf58a; }
+
+  .cat-title { font-size: 16px; font-weight: 700; }
+  .cat-hint { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .cat-selected-count {
+    margin-right: auto;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: #1a1a1a;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  /* FOOD ITEMS */
+  .food-grid { display: flex; flex-direction: column; gap: 7px; }
+
+  .food-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .food-item:active { transform: scale(0.98); }
+  .food-item.selected { border-color: var(--accent); background: #0d1900; }
+  .food-item.selected.carb { border-color: var(--accent2); background: #1a0f00; }
+  .food-item.selected.fat { border-color: var(--accent3); background: #001015; }
+  .food-item.selected.veg { border-color: #3cf58a; background: #001510; }
+
+  .food-check {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    flex-shrink: 0;
+    transition: all 0.15s;
+    color: transparent;
+  }
+  .food-item.selected .food-check {
+    background: var(--accent); border-color: var(--accent); color: #0a0a0a;
+  }
+  .food-item.selected.carb .food-check { background: var(--accent2); border-color: var(--accent2); }
+  .food-item.selected.fat .food-check { background: var(--accent3); border-color: var(--accent3); }
+  .food-item.selected.veg .food-check { background: #3cf58a; border-color: #3cf58a; }
+
+  .food-info { flex: 1; min-width: 0; }
+  .food-name { font-size: 14px; font-weight: 600; }
+  .food-portion { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+  .food-macros { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
+  .food-kcal { font-size: 14px; font-weight: 700; color: var(--text); }
+  .food-protein { font-size: 11px; color: var(--accent); font-weight: 600; }
+  .food-carb { font-size: 11px; color: var(--accent2); font-weight: 600; }
+  .food-fat-val { font-size: 11px; color: var(--accent3); font-weight: 600; }
+
+  /* MEAL SUMMARY */
+  .meal-summary {
+    background: #0a1800;
+    border: 1px solid #1a3000;
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+  .summary-title { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .summary-items { display: flex; flex-direction: column; gap: 4px; min-height: 24px; }
+  .summary-item { font-size: 13px; color: #ccc; display: flex; align-items: center; gap: 6px; }
+  .summary-item::before { content: '✓'; color: var(--accent); font-size: 11px; font-weight: 700; }
+  .summary-empty { font-size: 13px; color: var(--muted); font-style: italic; }
+
+  /* RESET */
+  .reset-btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Heebo', sans-serif;
+    cursor: pointer;
+    text-align: center;
+    margin-bottom: 20px;
+    transition: all 0.15s;
+  }
+  .reset-btn:active { background: #1a1a1a; }
+
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+  /* WEIGHT CONTROLS */
+  .food-item { flex-wrap: wrap; }
+  .weight-ctrl {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+  .food-item.selected .weight-ctrl,
+  .food-item.selected-2 .weight-ctrl,
+  .food-item.selected-3 .weight-ctrl,
+  .food-item.selected-4 .weight-ctrl { display: flex; }
+
+  .wc-btn {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: #1e1e1e;
+    color: var(--text);
+    font-size: 18px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    line-height: 1;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  .wc-btn:active { background: #333; transform: scale(0.92); }
+
+  .wc-input {
+    width: 56px;
+    background: #1a1a1a;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'Heebo', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    padding: 4px 6px;
+    -moz-appearance: textfield;
+  }
+  .wc-input::-webkit-inner-spin-button,
+  .wc-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .wc-input:focus { outline: none; border-color: var(--accent); }
+
+  .wc-unit { font-size: 11px; color: var(--muted); }
+  .wc-kcal-live { font-size: 12px; color: var(--accent); font-weight: 700; margin-right: auto; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>בונה <span>ארוחות</span></h1>
+  <div class="hero-sub">בחר מרכיבים בנפרד — תרכיב מה שמתחשק</div>
+  <div class="targets">
+    <div class="target">יעד <span>2,200 קל'</span></div>
+    <div class="target">חלבון <span>175g</span></div>
+    <div class="target">פחמימות <span>220g</span></div>
+    <div class="target">שומן <span>69g</span></div>
+  </div>
+</div>
+
+<div class="sticky-bar">
+  <div>
+    <div class="bar-label">סה"כ היום</div>
+    <div class="bar-macros">
+      <div class="bar-macro p">חלבון <span id="tot-p">0</span>g</div>
+      <div class="bar-macro c">פחמ' <span id="tot-c">0</span>g</div>
+      <div class="bar-macro f">שומן <span id="tot-f">0</span>g</div>
+    </div>
+  </div>
+  <div class="bar-nums">
+    <div>
+      <div class="bar-kcal" id="tot-kcal">0</div>
+      <div class="bar-target">מתוך 2,200 קל'</div>
+    </div>
+  </div>
+</div>
+
+<div class="progress-wrap">
+  <div class="prog-bar-wrap">
+    <div class="prog-label"><span>קל'</span><span id="prog-kcal-num">0/2200</span></div>
+    <div class="prog-track"><div class="prog-fill kcal" id="prog-kcal" style="width:0%"></div></div>
+  </div>
+  <div class="prog-bar-wrap">
+    <div class="prog-label"><span style="color:var(--accent)">חלבון</span><span id="prog-p-num">0/175g</span></div>
+    <div class="prog-track"><div class="prog-fill prot" id="prog-p" style="width:0%"></div></div>
+  </div>
+  <div class="prog-bar-wrap">
+    <div class="prog-label"><span style="color:var(--accent2)">פחמ'</span><span id="prog-c-num">0/220g</span></div>
+    <div class="prog-track"><div class="prog-fill carb" id="prog-c" style="width:0%"></div></div>
+  </div>
+  <div class="prog-bar-wrap">
+    <div class="prog-label"><span style="color:var(--accent3)">שומן</span><span id="prog-f-num">0/69g</span></div>
+    <div class="prog-track"><div class="prog-fill fat" id="prog-f" style="width:0%"></div></div>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- MEAL SUMMARY -->
+  <div class="meal-summary">
+    <div class="summary-title">הארוחה שלי היום</div>
+    <div class="summary-items" id="summary-list">
+      <div class="summary-empty">לא נבחר עדיין...</div>
+    </div>
+  </div>
+
+  <!-- PROTEINS -->
+  <div class="cat-section">
+    <div class="cat-header">
+      <div class="cat-dot protein"></div>
+      <div>
+        <div class="cat-title">חלבונים 🥩</div>
+        <div class="cat-hint">בחר כמה שרוצה — עיקר הארוחה</div>
+      </div>
+    </div>
+    <div class="food-grid" id="cat-protein">
+
+      <div class="food-item" data-name="חזה עוף" data-portion="100 גרם מבושל" data-kcal="165" data-p="31" data-c="0" data-f="4" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">חזה עוף</div>
+          <div class="food-portion">100 גרם מבושל</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">165 קל'</div>
+          <div class="food-protein">31g חלבון</div>
+        </div>
+      </div>
+
+      <div class="food-item" data-name="פרגיות" data-portion="100 גרם מבושל" data-kcal="185" data-p="27" data-c="0" data-f="8" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">פרגיות</div>
+          <div class="food-portion">100 גרם מבושל</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">185 קל'</div>
+          <div class="food-protein">27g חלבון</div>
+        </div>
+      </div>
+
+      <div class="food-item" data-name="חזה הודו" data-portion="100 גרם מבושל" data-kcal="155" data-p="30" data-c="0" data-f="3" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">חזה הודו</div>
+          <div class="food-portion">100 גרם מבושל</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">155 קל'</div>
+          <div class="food-protein">30g חלבון</div>
+        </div>
+      </div>
+
+      <div class="food-item" data-name="בשר טחון 5%" data-portion="100 גרם מבושל" data-kcal="215" data-p="26" data-c="0" data-f="12" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">בשר טחון 5%</div>
+          <div class="food-portion">100 גרם מבושל</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">215 קל'</div>
+          <div class="food-protein">26g חלבון</div>
+        </div>
+      </div>
+
+      <div class="food-item" data-name="סטייק / אנטריקוט" data-portion="100 גרם מבושל" data-kcal="230" data-p="26" data-c="0" data-f="14" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">סטייק / אנטריקוט</div>
+          <div class="food-portion">100 גרם מבושל</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">230 קל'</div>
+          <div class="food-protein">26g חלבון</div>
+        </div>
+      </div>
+
+      <div class="food-item" data-name="טונה בקופסה" data-portion="קופסה 160 גרם" data-kcal="150" data-p="34" data-c="0" data-f="1" data-cat="protein" data-baseGrams="160" data-step="80" data-min="80" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">טונה בקופסה</div>
+          <div class="food-portion">קופסה 160 גרם</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">150 קל'</div>
+          <div class="food-protein">34g חלבון</div>
+        </div>
+      </div>
+
+      <div class="food-item" data-name="סרדינים" data-portion="קופסה 100 גרם" data-kcal="190" data-p="25" data-c="0" data-f="10" data-cat="protein" data-baseGrams="100" data-step="50" data-min="50" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">סרדינים</div>
+          <div class="food-portion">קופסה 100 גרם</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">190 קל'</div>
+          <div class="food-protein">25g חלבון</div>
+        </div>
+      </div>
+
+      <div class="food-item" data-name="דג לבן / סלמון" data-portion="100 גרם מבושל" data-kcal="180" data-p="25" data-c="0" data-f="8" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">דג לבן / סלמון</div>
+          <div class="food-portion">100 גרם מבושל</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">180 קל'</div>
+          <div class="food-protein">25g חלבון</div>
+        </div>
+      </div>
+
+      <div class="food-item" data-name="ביצה" data-portion="ביצה אחת" data-kcal="78" data-p="6" data-c="0" data-f="5" data-cat="protein" data-baseGrams="78" data-step="1" data-min="1" data-unit="ביצה" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">ביצה</div>
+          <div class="food-portion">ביצה אחת (L)</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">78 קל'</div>
+          <div class="food-protein">6g חלבון</div>
+        </div>
+      </div>
+
+      <div class="food-item" data-name="גבינה לבנה 5%" data-portion="100 גרם" data-kcal="90" data-p="11" data-c="3" data-f="4" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">גבינה לבנה 5%</div>
+          <div class="food-portion">100 גרם</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">90 קל'</div>
+          <div class="food-protein">11g חלבון</div>
+        </div>
+      </div>
+
+      <div class="food-item" data-name="קוטג' 3%" data-portion="100 גרם" data-kcal="80" data-p="12" data-c="3" data-f="2" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">קוטג' 3%</div>
+          <div class="food-portion">100 גרם</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">80 קל'</div>
+          <div class="food-protein">12g חלבון</div>
+        </div>
+      </div>
+
+      <div class="food-item" data-name="מעדן חלבון" data-portion="מנה 170 גרם" data-kcal="120" data-p="20" data-c="8" data-f="1" data-cat="protein" data-baseGrams="170" data-step="85" data-min="85" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">מעדן חלבון</div>
+          <div class="food-portion">מנה 170 גרם</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">120 קל'</div>
+          <div class="food-protein">20g חלבון</div>
+        </div>
+      </div>
+
+      <div class="food-item" data-name="אבקת חלבון (סקופ)" data-portion="סקופ אחד ~30 גרם" data-kcal="120" data-p="25" data-c="3" data-f="2" data-cat="protein" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">אבקת חלבון</div>
+          <div class="food-portion">סקופ אחד ~30 גרם</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">120 קל'</div>
+          <div class="food-protein">25g חלבון</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- CARBS -->
+  <div class="cat-section">
+    <div class="cat-header">
+      <div class="cat-dot carb"></div>
+      <div>
+        <div class="cat-title">פחמימות 🍚</div>
+        <div class="cat-hint">בוקר + צהריים + לפני אימון בלבד</div>
+      </div>
+    </div>
+    <div class="food-grid" id="cat-carb">
+
+      <div class="food-item carb" data-name="אורז לבן" data-portion="100 גרם מבושל" data-kcal="130" data-p="3" data-c="28" data-f="0" data-cat="carb" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">אורז לבן</div>
+          <div class="food-portion">100 גרם מבושל</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">130 קל'</div>
+          <div class="food-carb">28g פחמ'</div>
+        </div>
+      </div>
+
+      <div class="food-item carb" data-name="אורז מלא" data-portion="100 גרם מבושל" data-kcal="112" data-p="3" data-c="23" data-f="1" data-cat="carb" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">אורז מלא</div>
+          <div class="food-portion">100 גרם מבושל</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">112 קל'</div>
+          <div class="food-carb">23g פחמ'</div>
+        </div>
+      </div>
+
+      <div class="food-item carb" data-name="קינואה" data-portion="100 גרם מבושל" data-kcal="120" data-p="4" data-c="21" data-f="2" data-cat="carb" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">קינואה</div>
+          <div class="food-portion">100 גרם מבושל</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">120 קל'</div>
+          <div class="food-carb">21g פחמ'</div>
+        </div>
+      </div>
+
+      <div class="food-item carb" data-name="פסטה" data-portion="100 גרם מבושל" data-kcal="158" data-p="6" data-c="31" data-f="1" data-cat="carb" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">פסטה</div>
+          <div class="food-portion">100 גרם מבושל</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">158 קל'</div>
+          <div class="food-carb">31g פחמ'</div>
+        </div>
+      </div>
+
+      <div class="food-item carb" data-name="בטטה" data-portion="100 גרם אפוי" data-kcal="90" data-p="2" data-c="20" data-f="0" data-cat="carb" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">בטטה</div>
+          <div class="food-portion">100 גרם אפוי</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">90 קל'</div>
+          <div class="food-carb">20g פחמ'</div>
+        </div>
+      </div>
+
+      <div class="food-item carb" data-name="לחם לבן" data-portion="פרוסה אחת ~30 גרם" data-kcal="80" data-p="3" data-c="15" data-f="1" data-cat="carb" data-baseGrams="30" data-step="1" data-min="1" data-unit="פרוסה" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">לחם לבן</div>
+          <div class="food-portion">פרוסה ~30 גרם</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">80 קל'</div>
+          <div class="food-carb">15g פחמ'</div>
+        </div>
+      </div>
+
+      <div class="food-item carb" data-name="לחם שיפון" data-portion="פרוסה אחת ~30 גרם" data-kcal="65" data-p="3" data-c="12" data-f="1" data-cat="carb" data-baseGrams="30" data-step="1" data-min="1" data-unit="פרוסה" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">לחם שיפון</div>
+          <div class="food-portion">פרוסה אחת ~30 גרם</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">65 קל'</div>
+          <div class="food-carb">12g פחמ'</div>
+        </div>
+      </div>
+
+      <div class="food-item carb" data-name="שיבולת שועל" data-portion="50 גרם יבש" data-kcal="190" data-p="7" data-c="32" data-f="4" data-cat="carb" data-baseGrams="50" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">שיבולת שועל</div>
+          <div class="food-portion">50 גרם יבש</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">190 קל'</div>
+          <div class="food-carb">32g פחמ'</div>
+        </div>
+      </div>
+
+      <div class="food-item carb" data-name="בננה" data-portion="בננה בינונית ~120 גרם" data-kcal="105" data-p="1" data-c="27" data-f="0" data-cat="carb" data-baseGrams="120" data-step="1" data-min="1" data-unit="בננה" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">בננה</div>
+          <div class="food-portion">בינונית ~120 גרם</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">105 קל'</div>
+          <div class="food-carb">27g פחמ'</div>
+        </div>
+      </div>
+
+      <div class="food-item carb" data-name="תפוח" data-portion="תפוח בינוני ~150 גרם" data-kcal="80" data-p="0" data-c="21" data-f="0" data-cat="carb" data-baseGrams="150" data-step="1" data-min="1" data-unit="תפוח" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">תפוח</div>
+          <div class="food-portion">בינוני ~150 גרם</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">80 קל'</div>
+          <div class="food-carb">21g פחמ'</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- FATS -->
+  <div class="cat-section">
+    <div class="cat-header">
+      <div class="cat-dot fat"></div>
+      <div>
+        <div class="cat-title">שומנים בריאים 🥑</div>
+        <div class="cat-hint">בכמות מדודה — חשוב לטסטוסטרון ואנרגיה</div>
+      </div>
+    </div>
+    <div class="food-grid" id="cat-fat">
+
+      <div class="food-item fat" data-name="שמן זית" data-portion="כפית אחת ~5 גרם" data-kcal="45" data-p="0" data-c="0" data-f="5" data-cat="fat" data-baseGrams="5" data-step="5" data-min="5" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">שמן זית</div>
+          <div class="food-portion">כפית ~5 גרם</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">45 קל'</div>
+          <div class="food-fat-val">5g שומן</div>
+        </div>
+      </div>
+
+      <div class="food-item fat" data-name="טחינה גולמית" data-portion="כף אחת ~15 גרם" data-kcal="88" data-p="3" data-c="2" data-f="8" data-cat="fat" data-baseGrams="15" data-step="5" data-min="5" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">טחינה גולמית</div>
+          <div class="food-portion">כף ~15 גרם</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">88 קל'</div>
+          <div class="food-fat-val">8g שומן</div>
+        </div>
+      </div>
+
+      <div class="food-item fat" data-name="אגוזי מלך" data-portion="חופן ~30 גרם" data-kcal="196" data-p="5" data-c="4" data-f="19" data-cat="fat" data-baseGrams="30" data-step="10" data-min="10" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">אגוזי מלך</div>
+          <div class="food-portion">חופן ~30 גרם</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">196 קל'</div>
+          <div class="food-fat-val">19g שומן</div>
+        </div>
+      </div>
+
+      <div class="food-item fat" data-name="שקדים" data-portion="חופן ~30 גרם" data-kcal="173" data-p="6" data-c="6" data-f="15" data-cat="fat" data-baseGrams="30" data-step="10" data-min="10" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">שקדים</div>
+          <div class="food-portion">חופן ~30 גרם</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">173 קל'</div>
+          <div class="food-fat-val">15g שומן</div>
+        </div>
+      </div>
+
+      <div class="food-item fat" data-name="חמאת בוטנים טבעית" data-portion="כף אחת ~16 גרם" data-kcal="95" data-p="4" data-c="3" data-f="8" data-cat="fat" data-baseGrams="16" data-step="8" data-min="8" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">חמאת בוטנים טבעית</div>
+          <div class="food-portion">כף ~16 גרם</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">95 קל'</div>
+          <div class="food-fat-val">8g שומן</div>
+        </div>
+      </div>
+
+      <div class="food-item fat" data-name="אבוקדו" data-portion="חצי אבוקדו ~80 גרם" data-kcal="128" data-p="2" data-c="7" data-f="12" data-cat="fat" data-baseGrams="80" data-step="1" data-min="1" data-unit="חצי" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">אבוקדו</div>
+          <div class="food-portion">חצי ~80 גרם</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">128 קל'</div>
+          <div class="food-fat-val">12g שומן</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- VEGS -->
+  <div class="cat-section">
+    <div class="cat-header">
+      <div class="cat-dot veg"></div>
+      <div>
+        <div class="cat-title">ירקות 🥗</div>
+        <div class="cat-hint">ללא הגבלה כמעט — ממלאים ומזינים</div>
+      </div>
+    </div>
+    <div class="food-grid" id="cat-veg">
+
+      <div class="food-item veg" data-name="מלפפון" data-portion="מלפפון שלם ~200 גרם" data-kcal="30" data-p="1" data-c="5" data-f="0" data-cat="veg" data-baseGrams="200" data-step="1" data-min="1" data-unit="מלפפון" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">מלפפון</div>
+          <div class="food-portion">שלם ~200 גרם</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">30 קל'</div>
+        </div>
+      </div>
+
+      <div class="food-item veg" data-name="עגבניה" data-portion="עגבניה ~150 גרם" data-kcal="27" data-p="1" data-c="5" data-f="0" data-cat="veg" data-baseGrams="150" data-step="1" data-min="1" data-unit="עגבניה" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">עגבניה</div>
+          <div class="food-portion">~150 גרם</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">27 קל'</div>
+        </div>
+      </div>
+
+      <div class="food-item veg" data-name="פלפל" data-portion="פלפל שלם ~120 גרם" data-kcal="31" data-p="1" data-c="6" data-f="0" data-cat="veg" data-baseGrams="120" data-step="1" data-min="1" data-unit="פלפל" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">פלפל</div>
+          <div class="food-portion">שלם ~120 גרם</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">31 קל'</div>
+        </div>
+      </div>
+
+      <div class="food-item veg" data-name="ברוקולי" data-portion="100 גרם מאודה" data-kcal="35" data-p="3" data-c="5" data-f="0" data-cat="veg" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">ברוקולי</div>
+          <div class="food-portion">100 גרם מאודה</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">35 קל'</div>
+        </div>
+      </div>
+
+      <div class="food-item veg" data-name="כרובית" data-portion="100 גרם מאודה" data-kcal="25" data-p="2" data-c="4" data-f="0" data-cat="veg" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">כרובית</div>
+          <div class="food-portion">100 גרם מאודה</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">25 קל'</div>
+        </div>
+      </div>
+
+      <div class="food-item veg" data-name="גזר" data-portion="גזר בינוני ~80 גרם" data-kcal="33" data-p="1" data-c="7" data-f="0" data-cat="veg" data-baseGrams="80" data-step="1" data-min="1" data-unit="גזר" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">גזר</div>
+          <div class="food-portion">בינוני ~80 גרם</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">33 קל'</div>
+        </div>
+      </div>
+
+      <div class="food-item veg" data-name="חסה / עלים" data-portion="קערה גדולה ~80 גרם" data-kcal="14" data-p="1" data-c="2" data-f="0" data-cat="veg" data-baseGrams="80" data-step="40" data-min="40" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">חסה / עלים</div>
+          <div class="food-portion">קערה גדולה ~80 גרם</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">14 קל'</div>
+        </div>
+      </div>
+
+      <div class="food-item veg" data-name="בצל ירוק + עשבי תיבול" data-portion="קומץ" data-kcal="10" data-p="0" data-c="2" data-f="0" data-cat="veg" data-baseGrams="10" data-step="5" data-min="5" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">בצל ירוק + עשבי תיבול</div>
+          <div class="food-portion">קומץ</div>
+        </div>
+        <div class="food-macros">
+          <div class="food-kcal">10 קל'</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <button class="reset-btn" onclick="resetAll()">🔄 איפוס הכל</button>
+
+</div>
+
+<script>
+  const TARGET = { kcal: 2200, p: 175, c: 220, f: 69 };
+  let totals = { kcal: 0, p: 0, c: 0, f: 0 };
+  const itemState = {};
+
+  function initItems() {
+    document.querySelectorAll('.food-item').forEach((el, idx) => {
+      const id = 'food_' + idx;
+      el.dataset.id = id;
+      const bg = parseInt(el.dataset.baseGrams) || 100;
+      const step = el.dataset.step ? parseInt(el.dataset.step) : (bg <= 20 ? 5 : 25);
+      const min  = el.dataset.min  ? parseInt(el.dataset.min)  : step;
+      const unit = el.dataset.unit || 'גרם';
+
+      itemState[id] = {
+        baseKcal: parseFloat(el.dataset.kcal),
+        baseP:    parseFloat(el.dataset.p),
+        baseC:    parseFloat(el.dataset.c),
+        baseF:    parseFloat(el.dataset.f),
+        baseGrams: bg,
+        currentGrams: bg,
+        selected: false,
+        cat:    el.dataset.cat,
+        name:   el.dataset.name,
+        step, min, unit
+      };
+
+      const ctrl = document.createElement('div');
+      ctrl.className = 'weight-ctrl';
+      ctrl.innerHTML = `
+        <div class="wc-btn" onclick="changeWeight(event,'${id}',-1)">−</div>
+        <input class="wc-input" id="wc-inp-${id}" type="number" value="${bg}" min="${min}"
+               onclick="event.stopPropagation()"
+               oninput="onWeightInput(event,'${id}')"
+               onblur="onWeightBlur('${id}')">
+        <div class="wc-unit">${unit}</div>
+        <div class="wc-btn" onclick="changeWeight(event,'${id}',1)">+</div>
+        <div class="wc-kcal-live" id="wc-kcal-${id}">${Math.round(itemState[id].baseKcal)} קל'</div>
+      `;
+      el.appendChild(ctrl);
+    });
+  }
+
+  function getMacros(id) {
+    const s = itemState[id];
+    const ratio = s.currentGrams / s.baseGrams;
+    return {
+      kcal: Math.round(s.baseKcal * ratio),
+      p:    Math.round(s.baseP    * ratio),
+      c:    Math.round(s.baseC    * ratio),
+      f:    Math.round(s.baseF    * ratio),
+    };
+  }
+
+  function applyGrams(id, newGrams) {
+    const s = itemState[id];
+    newGrams = Math.max(s.min, Math.round(newGrams));
+    if (newGrams === s.currentGrams) return;
+
+    if (s.selected) {
+      const old = getMacros(id);
+      totals.kcal -= old.kcal;
+      totals.p    -= old.p;
+      totals.c    -= old.c;
+      totals.f    -= old.f;
+    }
+    s.currentGrams = newGrams;
+    const inp = document.getElementById('wc-inp-' + id);
+    if (inp && document.activeElement !== inp) inp.value = newGrams;
+    const m = getMacros(id);
+    document.getElementById('wc-kcal-' + id).textContent = m.kcal + " קל'";
+    if (s.selected) {
+      totals.kcal += m.kcal;
+      totals.p    += m.p;
+      totals.c    += m.c;
+      totals.f    += m.f;
+    }
+    updateUI();
+  }
+
+  function changeWeight(e, id, dir) {
+    e.stopPropagation();
+    const s = itemState[id];
+    applyGrams(id, s.currentGrams + dir * s.step);
+    // sync input
+    const inp = document.getElementById('wc-inp-' + id);
+    if (inp) inp.value = itemState[id].currentGrams;
+  }
+
+  function onWeightInput(e, id) {
+    e.stopPropagation();
+    const val = parseInt(e.target.value);
+    if (!isNaN(val) && val > 0) applyGrams(id, val);
+  }
+
+  function onWeightBlur(id) {
+    const s = itemState[id];
+    const inp = document.getElementById('wc-inp-' + id);
+    if (inp) {
+      const val = parseInt(inp.value);
+      if (isNaN(val) || val < s.min) {
+        inp.value = s.currentGrams;
+      } else {
+        applyGrams(id, val);
+      }
+    }
+  }
+
+  function toggleFood(el, event) {
+    const id = el.dataset.id;
+    if (!id) return;
+    // don't toggle if clicking inside the weight control
+    if (event && event.target.closest('.weight-ctrl')) return;
+    const s = itemState[id];
+    const cat = s.cat;
+    const clsMap = { protein: 'selected', carb: 'selected-2', fat: 'selected-3', veg: 'selected-4' };
+    const cls = clsMap[cat] || 'selected';
+    const m = getMacros(id);
+
+    if (s.selected) {
+      el.classList.remove(cls);
+      s.selected = false;
+      totals.kcal -= m.kcal;
+      totals.p    -= m.p;
+      totals.c    -= m.c;
+      totals.f    -= m.f;
+    } else {
+      el.classList.add(cls);
+      s.selected = true;
+      totals.kcal += m.kcal;
+      totals.p    += m.p;
+      totals.c    += m.c;
+      totals.f    += m.f;
+    }
+    updateUI();
+  }
+
+  function updateUI() {
+    totals.kcal = Math.max(0, totals.kcal);
+    totals.p    = Math.max(0, totals.p);
+    totals.c    = Math.max(0, totals.c);
+    totals.f    = Math.max(0, totals.f);
+
+    document.getElementById('tot-kcal').textContent = totals.kcal;
+    document.getElementById('tot-p').textContent    = totals.p;
+    document.getElementById('tot-c').textContent    = totals.c;
+    document.getElementById('tot-f').textContent    = totals.f;
+
+    const kcalEl = document.getElementById('tot-kcal');
+    kcalEl.className = 'bar-kcal' + (totals.kcal > TARGET.kcal + 100 ? ' over' : '');
+
+    const setBar = (id, numId, val, target, cls) => {
+      const pct = Math.min((val / target) * 100, 100);
+      const el  = document.getElementById(id);
+      el.style.width = pct + '%';
+      el.className = 'prog-fill ' + (val > target * 1.05 ? 'over' : cls);
+      document.getElementById(numId).textContent = val + '/' + target + (id.includes('kcal') ? '' : 'g');
+    };
+    setBar('prog-kcal', 'prog-kcal-num', totals.kcal, TARGET.kcal, 'kcal');
+    setBar('prog-p',    'prog-p-num',    totals.p,    TARGET.p,    'prot');
+    setBar('prog-c',    'prog-c-num',    totals.c,    TARGET.c,    'carb');
+    setBar('prog-f',    'prog-f-num',    totals.f,    TARGET.f,    'fat');
+
+    // Summary
+    const list = document.getElementById('summary-list');
+    const selected = Object.entries(itemState).filter(([k,v]) => v.selected);
+    if (selected.length === 0) {
+      list.innerHTML = '<div class="summary-empty">לא נבחר עדיין...</div>';
+    } else {
+      list.innerHTML = selected.map(([k, s]) => {
+        const m = getMacros(k);
+        return `<div class="summary-item">${s.name}
+          <span style="color:var(--muted);font-size:11px"> · ${s.currentGrams}${s.unit} · ${m.kcal} קל' · ${m.p}g חלבון</span>
+        </div>`;
+      }).join('');
+    }
+  }
+
+  function resetAll() {
+    document.querySelectorAll('.food-item').forEach(el => {
+      el.classList.remove('selected','selected-2','selected-3','selected-4');
+      const id = el.dataset.id;
+      if (id && itemState[id]) {
+        itemState[id].selected = false;
+        itemState[id].currentGrams = itemState[id].baseGrams;
+        const inp = document.getElementById('wc-inp-' + id);
+        if (inp) inp.value = itemState[id].baseGrams;
+        const kEl = document.getElementById('wc-kcal-' + id);
+        if (kEl) kEl.textContent = Math.round(itemState[id].baseKcal) + " קל'";
+      }
+    });
+    totals = { kcal: 0, p: 0, c: 0, f: 0 };
+    updateUI();
+  }
+
+  window.addEventListener('DOMContentLoaded', initItems);
+</script>
+</body>
+</html>
