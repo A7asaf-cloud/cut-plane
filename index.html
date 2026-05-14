@@ -993,6 +993,56 @@
     }
   }
 
+  // --- localStorage ---
+  function saveState() {
+    const data = {};
+    Object.entries(itemState).forEach(([id, s]) => {
+      if (s.selected || s.currentGrams !== s.baseGrams) {
+        data[id] = { selected: s.selected, grams: s.currentGrams };
+      }
+    });
+    try { localStorage.setItem('foodBuilder', JSON.stringify(data)); } catch(e) {}
+  }
+
+  function loadState() {
+    let data;
+    try { data = JSON.parse(localStorage.getItem('foodBuilder')); } catch(e) {}
+    if (!data) return;
+    Object.entries(data).forEach(([id, saved]) => {
+      if (!itemState[id]) return;
+      const s = itemState[id];
+      // Apply grams first
+      if (saved.grams && saved.grams !== s.baseGrams) {
+        s.currentGrams = saved.grams;
+        const inp = document.getElementById('wc-inp-' + id);
+        if (inp) inp.value = saved.grams;
+        const m = getMacros(id);
+        const kEl = document.getElementById('wc-kcal-' + id);
+        if (kEl) kEl.textContent = m.kcal + " קל'";
+      }
+      // Then select
+      if (saved.selected) {
+        const el = document.querySelector(`[data-id="${id}"]`);
+        if (el) {
+          const cat = s.cat;
+          const clsMap = { protein: 'selected', carb: 'selected-2', fat: 'selected-3', veg: 'selected-4' };
+          el.classList.add(clsMap[cat] || 'selected');
+          s.selected = true;
+          const m = getMacros(id);
+          totals.kcal += m.kcal;
+          totals.p    += m.p;
+          totals.c    += m.c;
+          totals.f    += m.f;
+        }
+      }
+    });
+    updateUI();
+  }
+
+  // Save after every change
+  const _origUpdateUI = updateUI;
+  updateUI = function() { _origUpdateUI(); saveState(); };
+
   function resetAll() {
     document.querySelectorAll('.food-item').forEach(el => {
       el.classList.remove('selected','selected-2','selected-3','selected-4');
@@ -1007,10 +1057,14 @@
       }
     });
     totals = { kcal: 0, p: 0, c: 0, f: 0 };
+    try { localStorage.removeItem('foodBuilder'); } catch(e) {}
     updateUI();
   }
 
-  window.addEventListener('DOMContentLoaded', initItems);
+  window.addEventListener('DOMContentLoaded', () => {
+    initItems();
+    loadState();
+  });
 </script>
 </body>
 </html>
