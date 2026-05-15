@@ -422,40 +422,98 @@
     <div class="rec-title">💡 ארוחות מומלצות לחיטוב</div>
     <div class="rec-scroll">
 
+      <!-- BREAKFAST OPTIONS -->
+      <div class="rec-card" onclick="applyMeal(['ביצה','גבינה לבנה 5%','לחם שיפון','עגבניה','מלפפון'])">
+        <div class="rec-name">🌅 בוקר קלאסי</div>
+        <div class="rec-sub">4 ביצים · גבינה לבנה · לחם שיפון · ירקות</div>
+        <div class="rec-macros">~500 קל' · 44g חלבון</div>
+      </div>
+
+      <div class="rec-card" onclick="applyMeal(['ביצה','גבינה בולגרית','לחם שיפון','עגבניה','מלפפון','פלפל'])">
+        <div class="rec-name">🌅 בוקר בולגרי</div>
+        <div class="rec-sub">3 ביצים · גבינה בולגרית · לחם שיפון · סלט</div>
+        <div class="rec-macros">~520 קל' · 38g חלבון</div>
+      </div>
+
+      <div class="rec-card" onclick="applyMeal(['ביצה','גבינה צהובה','לחם שיפון','עגבניה'])">
+        <div class="rec-name">🌅 בוקר גבינה צהובה</div>
+        <div class="rec-sub">3 ביצים · גבינה צהובה · לחם שיפון</div>
+        <div class="rec-macros">~540 קל' · 42g חלבון</div>
+      </div>
+
+      <div class="rec-card" onclick="applyMeal(['קוטג 3%','שיבולת שועל','בננה','ביצה'])">
+        <div class="rec-name">🌅 בוקר מהיר</div>
+        <div class="rec-sub">קוטג' · שיבולת שועל · בננה · ביצה</div>
+        <div class="rec-macros">~480 קל' · 35g חלבון</div>
+      </div>
+
+      <!-- LUNCH OPTIONS -->
       <div class="rec-card" onclick="applyMeal(['חזה עוף','אורז לבן','ברוקולי','שמן זית'])">
-        <div class="rec-name">עוף + אורז</div>
-        <div class="rec-sub">200g עוף · 150g אורז · ברוקולי</div>
+        <div class="rec-name">☀️ צהריים עוף + אורז</div>
+        <div class="rec-sub">200g עוף · 150g אורז · ברוקולי · שמן זית</div>
         <div class="rec-macros">~640 קל' · 55g חלבון</div>
       </div>
 
-      <div class="rec-card" onclick="applyMeal(['ביצה','גבינה לבנה 5%','לחם שיפון','עגבניה','מלפפון'])">
-        <div class="rec-name">ביצים + גבינה</div>
-        <div class="rec-sub">4 ביצים · גבינה לבנה · לחם שיפון</div>
-        <div class="rec-macros">~480 קל' · 40g חלבון</div>
+      <div class="rec-card" onclick="applyMeal(['בשר טחון 15%','אורז לבן','עגבניה','פלפל','שמן זית'])">
+        <div class="rec-name">☀️ צהריים בשר טחון</div>
+        <div class="rec-sub">200g בשר טחון · 150g אורז · ירקות</div>
+        <div class="rec-macros">~700 קל' · 48g חלבון</div>
       </div>
 
-      <div class="rec-card" onclick="applyMeal(['טונה בקופסה','אורז לבן','מלפפון','עגבניה','טחינה גולמית'])">
-        <div class="rec-name">טונה + אורז</div>
-        <div class="rec-sub">200g טונה · 150g אורז · סלט</div>
-        <div class="rec-macros">~520 קל' · 50g חלבון</div>
+      <div class="rec-card" onclick="applyMeal(['סטייק / אנטריקוט','אורז לבן','ברוקולי','כרובית'])">
+        <div class="rec-name">☀️ צהריים סטייק</div>
+        <div class="rec-sub">200g סטייק · 150g אורז · ירקות מאודים</div>
+        <div class="rec-macros">~660 קל' · 52g חלבון</div>
       </div>
 
-      <div class="rec-card" onclick="applyMeal(['דג לבן / סלמון','בטטה','ברוקולי','שמן זית'])">
-        <div class="rec-name">דג + בטטה</div>
+      <div class="rec-card" onclick="applyMeal(['חזה עוף','קינואה','ברוקולי','גזר','שמן זית'])">
+        <div class="rec-name">☀️ צהריים עוף + קינואה</div>
+        <div class="rec-sub">200g עוף · 120g קינואה · ירקות</div>
+        <div class="rec-macros">~620 קל' · 58g חלבון</div>
+      </div>
+
+      <div class="rec-card" onclick="applyMeal(['סלמון','בטטה','ברוקולי','שמן זית'])">
+        <div class="rec-name">☀️ צהריים סלמון</div>
         <div class="rec-sub">200g סלמון · בטטה · ברוקולי</div>
-        <div class="rec-macros">~580 קל' · 50g חלבון</div>
+        <div class="rec-macros">~580 קל' · 44g חלבון</div>
       </div>
 
-      <div class="rec-card" onclick="applyMeal(['ביצה','טונה בקופסה','עגבניה','מלפפון','פלפל','טחינה גולמית'])">
-        <div class="rec-name">ארוחת ערב חיטוב</div>
-        <div class="rec-sub">3 ביצים · טונה · סלט · טחינה</div>
-        <div class="rec-macros">~450 קל' · 45g חלבון · ללא פחמימות</div>
+      <!-- DINNER OPTIONS -->
+      <div class="rec-card" onclick="applyMeal(['ביצה','חזה עוף','עגבניה','מלפפון','פלפל','שמן זית'])">
+        <div class="rec-name">🌙 ערב עוף + ביצים</div>
+        <div class="rec-sub">150g עוף · 3 ביצים · סלט גדול</div>
+        <div class="rec-macros">~520 קל' · 55g חלבון · ללא פחמ'</div>
       </div>
 
-      <div class="rec-card" onclick="applyMeal([\"קוטג' 3%\",'בננה','שיבולת שועל'])">
-        <div class="rec-name">ארוחת בוקר מהירה</div>
-        <div class="rec-sub">קוטג' · שיבולת שועל · בננה</div>
-        <div class="rec-macros">~380 קל' · 20g חלבון</div>
+      <div class="rec-card" onclick="applyMeal(['ביצה','בשר טחון 15%','עגבניה','מלפפון','פלפל'])">
+        <div class="rec-name">🌙 ערב בשר + ביצים</div>
+        <div class="rec-sub">150g בשר טחון · 2 ביצים · סלט</div>
+        <div class="rec-macros">~540 קל' · 48g חלבון · ללא פחמ'</div>
+      </div>
+
+      <div class="rec-card" onclick="applyMeal(['ביצה','גבינה לבנה 5%','עגבניה','מלפפון','פלפל','טחינה גולמית'])">
+        <div class="rec-name">🌙 ערב קל ביצים + גבינה</div>
+        <div class="rec-sub">4 ביצים · גבינה לבנה · סלט · טחינה</div>
+        <div class="rec-macros">~480 קל' · 42g חלבון · ללא פחמ'</div>
+      </div>
+
+      <div class="rec-card" onclick="applyMeal(['סלמון','עגבניה','מלפפון','ברוקולי','שמן זית'])">
+        <div class="rec-name">🌙 ערב סלמון + ירקות</div>
+        <div class="rec-sub">200g סלמון · ירקות מאודים · שמן זית</div>
+        <div class="rec-macros">~460 קל' · 44g חלבון · ללא פחמ'</div>
+      </div>
+
+      <!-- SNACKS -->
+      <div class="rec-card" onclick="applyMeal(['מעדן חלבון','בננה'])">
+        <div class="rec-name">⚡ סנאק לפני אימון</div>
+        <div class="rec-sub">מעדן חלבון · בננה</div>
+        <div class="rec-macros">~265 קל' · 21g חלבון</div>
+      </div>
+
+      <div class="rec-card" onclick="applyMeal(['קוטג 3%','אגוזי מלך'])">
+        <div class="rec-name">⚡ סנאק קל</div>
+        <div class="rec-sub">קוטג 3% · אגוזי מלך</div>
+        <div class="rec-macros">~275 קל' · 18g חלבון</div>
       </div>
 
     </div>
@@ -628,10 +686,10 @@
         </div>
       </div>
 
-      <div class="food-item" data-name="קוטג' 3%" data-portion="100 גרם" data-kcal="80" data-p="12" data-c="3" data-f="2" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+      <div class="food-item" data-name="קוטג 3%" data-portion="100 גרם" data-kcal="80" data-p="12" data-c="3" data-f="2" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
         <div class="food-check">✓</div>
         <div class="food-info">
-          <div class="food-name">קוטג' 3%</div>
+          <div class="food-name">קוטג 3%</div>
           <div class="food-portion">100 גרם</div>
         </div>
         <div class="food-per100">80 קל' | 12g חלבון ל-100 גרם</div><div class="food-macros">
@@ -1201,13 +1259,23 @@
 
   // --- Recommended Meals ---
   function applyMeal(names) {
-    // Reset first
     resetAll();
-    // Select each food by name
     names.forEach(name => {
       const el = document.querySelector(`[data-name="${name}"]`);
-      if (el) toggleFood(el, { target: el });
+      if (!el) return;
+      const id = el.dataset.id;
+      if (!id || !itemState[id]) return;
+      const s = itemState[id];
+      const clsMap = { protein: 'selected', carb: 'selected-2', fat: 'selected-3', veg: 'selected-4' };
+      el.classList.add(clsMap[s.cat] || 'selected');
+      s.selected = true;
+      const m = getMacros(id);
+      totals.kcal += m.kcal;
+      totals.p    += m.p;
+      totals.c    += m.c;
+      totals.f    += m.f;
     });
+    updateUI();
   }
 
   // --- Search ---
@@ -1246,7 +1314,7 @@
     inp.focus();
   }
 
-  const STORAGE_VERSION = 'v9';
+  const STORAGE_VERSION = 'v12';
 
   function saveState() {
     const data = {};
