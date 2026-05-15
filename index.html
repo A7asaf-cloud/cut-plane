@@ -565,15 +565,51 @@ padding: 4px 6px;
     </div>
   </div>
 
-  <div class="food-item" data-name="דג לבן / סלמון" data-portion="100 גרם מבושל" data-kcal="188" data-p="25" data-c="0" data-f="12" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+  <div class="food-item" data-name="סלמון" data-portion="100 גרם מבושל" data-kcal="206" data-p="22" data-c="0" data-f="12" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
     <div class="food-check">✓</div>
     <div class="food-info">
-      <div class="food-name">דג לבן / סלמון</div>
+      <div class="food-name">סלמון</div>
       <div class="food-portion">100 גרם מבושל</div>
     </div>
-    <div class="food-per100">188 קל' | 25g חלבון ל-100 גרם</div><div class="food-macros">
-      <div class="food-kcal">188 קל'</div>
+    <div class="food-per100">206 קל' | 22g חלבון ל-100 גרם</div><div class="food-macros">
+      <div class="food-kcal">206 קל'</div>
+      <div class="food-protein">22g חלבון</div>
+    </div>
+  </div>
+
+  <div class="food-item" data-name="דג לבן (בורי/טיילפיש)" data-portion="100 גרם מבושל" data-kcal="128" data-p="26" data-c="0" data-f="3" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+    <div class="food-check">✓</div>
+    <div class="food-info">
+      <div class="food-name">דג לבן (בורי/טיילפיש)</div>
+      <div class="food-portion">100 גרם מבושל</div>
+    </div>
+    <div class="food-per100">128 קל' | 26g חלבון ל-100 גרם</div><div class="food-macros">
+      <div class="food-kcal">128 קל'</div>
+      <div class="food-protein">26g חלבון</div>
+    </div>
+  </div>
+
+  <div class="food-item" data-name="גבינה צהובה" data-portion="100 גרם" data-kcal="403" data-p="25" data-c="1" data-f="33" data-cat="protein" data-baseGrams="100" data-step="10" data-min="10" data-unit="גרם" onclick="toggleFood(this, event)">
+    <div class="food-check">✓</div>
+    <div class="food-info">
+      <div class="food-name">גבינה צהובה</div>
+      <div class="food-portion">100 גרם</div>
+    </div>
+    <div class="food-per100">403 קל' | 25g חלבון ל-100 גרם</div><div class="food-macros">
+      <div class="food-kcal">403 קל'</div>
       <div class="food-protein">25g חלבון</div>
+    </div>
+  </div>
+
+  <div class="food-item" data-name="גבינה בולגרית" data-portion="100 גרם" data-kcal="264" data-p="14" data-c="4" data-f="21" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+    <div class="food-check">✓</div>
+    <div class="food-info">
+      <div class="food-name">גבינה בולגרית</div>
+      <div class="food-portion">100 גרם</div>
+    </div>
+    <div class="food-per100">264 קל' | 14g חלבון ל-100 גרם</div><div class="food-macros">
+      <div class="food-kcal">264 קל'</div>
+      <div class="food-protein">14g חלבון</div>
     </div>
   </div>
 
@@ -613,15 +649,15 @@ padding: 4px 6px;
     </div>
   </div>
 
-  <div class="food-item" data-name="מעדן חלבון" data-portion="100 גרם" data-kcal="71" data-p="12" data-c="5" data-f="1" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+  <div class="food-item" data-name="מעדן חלבון" data-portion="מנה 200 גרם" data-kcal="160" data-p="20" data-c="10" data-f="2" data-cat="protein" data-baseGrams="200" data-step="100" data-min="100" data-unit="גרם" onclick="toggleFood(this, event)">
     <div class="food-check">✓</div>
     <div class="food-info">
       <div class="food-name">מעדן חלבון</div>
-      <div class="food-portion">100 גרם</div>
+      <div class="food-portion">מנה 200 גרם</div>
     </div>
-    <div class="food-per100">71 קל' | 12g חלבון ל-100 גרם</div><div class="food-macros">
-      <div class="food-kcal">71 קל'</div>
-      <div class="food-protein">12g חלבון</div>
+    <div class="food-per100">80 קל' | 10g חלבון ל-100 גרם</div><div class="food-macros">
+      <div class="food-kcal">160 קל'</div>
+      <div class="food-protein">20g חלבון</div>
     </div>
   </div>
 
@@ -1233,7 +1269,7 @@ padding: 4px 6px;
     inp.focus();
   }
 
-  const STORAGE_VERSION = 'v7';
+  const STORAGE_VERSION = 'v9';
 
   function saveState() {
     const data = {};
