@@ -1038,6 +1038,30 @@
         </div>
       </div>
 
+      <div class="food-item carb" data-name="פתיתים" data-portion="100 גרם מבושל" data-kcal="127" data-p="4" data-c="25" data-f="1" data-cat="carb" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">פתיתים</div>
+          <div class="food-portion">100 גרם מבושל</div>
+        </div>
+        <div class="food-per100">127 קל' | 4g חלבון ל-100 גרם</div><div class="food-macros">
+          <div class="food-kcal">127 קל'</div>
+          <div class="food-carb">25g פחמ'</div>
+        </div>
+      </div>
+
+      <div class="food-item carb" data-name="קוסקוס" data-portion="100 גרם מבושל" data-kcal="112" data-p="4" data-c="23" data-f="0" data-cat="carb" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">קוסקוס</div>
+          <div class="food-portion">100 גרם מבושל</div>
+        </div>
+        <div class="food-per100">112 קל' | 4g חלבון ל-100 גרם</div><div class="food-macros">
+          <div class="food-kcal">112 קל'</div>
+          <div class="food-carb">23g פחמ'</div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -1494,7 +1518,7 @@
     inp.focus();
   }
 
-  const STORAGE_VERSION = 'v14';
+  const STORAGE_VERSION = 'v15';
 
   function saveState() {
     const data = {};
