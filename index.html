@@ -734,6 +734,54 @@
         </div>
       </div>
 
+      <div class="food-item" data-name="כנפי עוף אפויות" data-portion="100 גרם" data-kcal="203" data-p="30" data-c="0" data-f="8" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">כנפי עוף אפויות</div>
+          <div class="food-portion">100 גרם ללא עור</div>
+        </div>
+        <div class="food-per100">203 קל' | 30g חלבון ל-100 גרם</div><div class="food-macros">
+          <div class="food-kcal">203 קל'</div>
+          <div class="food-protein">30g חלבון</div>
+        </div>
+      </div>
+
+      <div class="food-item" data-name="שוק עוף" data-portion="100 גרם" data-kcal="155" data-p="24" data-c="0" data-f="6" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">שוק עוף</div>
+          <div class="food-portion">100 גרם ללא עור מבושל</div>
+        </div>
+        <div class="food-per100">155 קל' | 24g חלבון ל-100 גרם</div><div class="food-macros">
+          <div class="food-kcal">155 קל'</div>
+          <div class="food-protein">24g חלבון</div>
+        </div>
+      </div>
+
+      <div class="food-item" data-name="ירך עוף" data-portion="100 גרם" data-kcal="179" data-p="25" data-c="0" data-f="8" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">ירך עוף</div>
+          <div class="food-portion">100 גרם ללא עור מבושל</div>
+        </div>
+        <div class="food-per100">179 קל' | 25g חלבון ל-100 גרם</div><div class="food-macros">
+          <div class="food-kcal">179 קל'</div>
+          <div class="food-protein">25g חלבון</div>
+        </div>
+      </div>
+
+      <div class="food-item" data-name="שניצל מטוגן" data-portion="100 גרם" data-kcal="297" data-p="18" data-c="11" data-f="17" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">שניצל מטוגן</div>
+          <div class="food-portion">100 גרם (עם פירורים)</div>
+        </div>
+        <div class="food-per100">297 קל' | 18g חלבון ל-100 גרם</div><div class="food-macros">
+          <div class="food-kcal">297 קל'</div>
+          <div class="food-protein">18g חלבון</div>
+        </div>
+      </div>
+
       <div class="food-item" data-name="שווארמה הודו" data-portion="100 גרם" data-kcal="130" data-p="24" data-c="2" data-f="5" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
         <div class="food-check">✓</div>
         <div class="food-info">
@@ -1150,6 +1198,20 @@
         </div>
       </div>
 
+      </div>
+
+      <div class="food-item fat" data-name="חמאה" data-portion="כף ~14 גרם" data-kcal="102" data-p="0" data-c="0" data-f="12" data-cat="fat" data-baseGrams="14" data-step="7" data-min="7" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">חמאה</div>
+          <div class="food-portion">כף ~14 גרם</div>
+        </div>
+        <div class="food-per100">717 קל' | 81g שומן ל-100 גרם</div><div class="food-macros">
+          <div class="food-kcal">102 קל'</div>
+          <div class="food-fat-val">12g שומן</div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -1518,7 +1580,7 @@
     inp.focus();
   }
 
-  const STORAGE_VERSION = 'v15';
+  const STORAGE_VERSION = 'v16';
 
   function saveState() {
     const data = {};
