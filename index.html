@@ -160,16 +160,6 @@
 
   .cat-title { font-size: 16px; font-weight: 700; }
   .cat-hint { font-size: 11px; color: var(--muted); margin-top: 1px; }
-  .cat-selected-count {
-    margin-right: auto;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 3px 10px;
-    border-radius: 20px;
-    background: #1a1a1a;
-    border: 1px solid var(--border);
-    color: var(--muted);
-  }
 
   /* FOOD ITEMS */
   .food-grid { display: flex; flex-direction: column; gap: 7px; }
@@ -224,9 +214,7 @@
   .food-fat-val { font-size: 11px; color: var(--accent3); font-weight: 600; }
 
   /* RECOMMENDED MEALS */
-  .rec-section {
-    margin-bottom: 20px;
-  }
+  .rec-section { margin-bottom: 20px; }
   .rec-title {
     font-size: 12px;
     font-weight: 700;
@@ -421,7 +409,6 @@
     <div class="rec-title">💡 ארוחות מומלצות לחיטוב</div>
     <div class="rec-scroll">
 
-      <!-- BREAKFAST OPTIONS -->
       <div class="rec-card" onclick="applyMeal(['ביצה','גבינה לבנה 5%','לחם שיפון','עגבניה','מלפפון'])">
         <div class="rec-name">🌅 בוקר קלאסי</div>
         <div class="rec-sub">4 ביצים · גבינה לבנה · לחם שיפון · ירקות</div>
@@ -446,7 +433,6 @@
         <div class="rec-macros">~480 קל' · 35g חלבון</div>
       </div>
 
-      <!-- LUNCH OPTIONS -->
       <div class="rec-card" onclick="applyMeal(['חזה עוף','אורז לבן','ברוקולי','שמן זית'])">
         <div class="rec-name">☀️ צהריים עוף + אורז</div>
         <div class="rec-sub">200g עוף · 150g אורז · ברוקולי · שמן זית</div>
@@ -477,7 +463,6 @@
         <div class="rec-macros">~580 קל' · 44g חלבון</div>
       </div>
 
-      <!-- DINNER OPTIONS -->
       <div class="rec-card" onclick="applyMeal(['ביצה','חזה עוף','עגבניה','מלפפון','פלפל','שמן זית'])">
         <div class="rec-name">🌙 ערב עוף + ביצים</div>
         <div class="rec-sub">150g עוף · 3 ביצים · סלט גדול</div>
@@ -502,7 +487,6 @@
         <div class="rec-macros">~460 קל' · 44g חלבון · ללא פחמ'</div>
       </div>
 
-      <!-- SNACKS -->
       <div class="rec-card" onclick="applyMeal(['מעדן חלבון','בננה'])">
         <div class="rec-name">⚡ סנאק לפני אימון</div>
         <div class="rec-sub">מעדן חלבון · בננה</div>
@@ -538,6 +522,54 @@
         <div class="food-per100">165 קל' | 31g חלבון ל-100 גרם</div><div class="food-macros">
           <div class="food-kcal">165 קל'</div>
           <div class="food-protein">31g חלבון</div>
+        </div>
+      </div>
+
+      <div class="food-item" data-name="כבד עוף" data-portion="100 גרם מבושל" data-kcal="167" data-p="25" data-c="1" data-f="7" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">כבד עוף</div>
+          <div class="food-portion">100 גרם מבושל</div>
+        </div>
+        <div class="food-per100">167 קל' | 25g חלבון ל-100 גרם</div><div class="food-macros">
+          <div class="food-kcal">167 קל'</div>
+          <div class="food-protein">25g חלבון</div>
+        </div>
+      </div>
+
+      <div class="food-item" data-name="נקניקיות מרגז" data-portion="100 גרם" data-kcal="250" data-p="13" data-c="2" data-f="20" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">נקניקיות מרגז</div>
+          <div class="food-portion">100 גרם</div>
+        </div>
+        <div class="food-per100">250 קל' | 13g חלבון ל-100 גרם</div><div class="food-macros">
+          <div class="food-kcal">250 קל'</div>
+          <div class="food-protein">13g חלבון</div>
+        </div>
+      </div>
+
+      <div class="food-item" data-name="נקניקיות עוף" data-portion="100 גרם" data-kcal="200" data-p="11" data-c="5" data-f="15" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">נקניקיות עוף</div>
+          <div class="food-portion">100 גרם</div>
+        </div>
+        <div class="food-per100">200 קל' | 11g חלבון ל-100 גרם</div><div class="food-macros">
+          <div class="food-kcal">200 קל'</div>
+          <div class="food-protein">11g חלבון</div>
+        </div>
+      </div>
+
+      <div class="food-item" data-name="פסטרמת הודו" data-portion="100 גרם" data-kcal="90" data-p="16" data-c="1" data-f="2" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">פסטרמת הודו</div>
+          <div class="food-portion">100 גרם</div>
+        </div>
+        <div class="food-per100">90 קל' | 16g חלבון ל-100 גרם</div><div class="food-macros">
+          <div class="food-kcal">90 קל'</div>
+          <div class="food-protein">16g חלבון</div>
         </div>
       </div>
 
@@ -1001,6 +1033,54 @@
     </div>
     <div class="food-grid" id="cat-carb">
 
+      <div class="food-item carb" data-name="תמר מג'הול" data-portion="תמר אחד ~24 גרם" data-kcal="66" data-p="0" data-c="18" data-f="0" data-cat="carb" data-baseGrams="24" data-step="24" data-min="24" data-unit="תמר" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">תמר מג'הול</div>
+          <div class="food-portion">תמר אחד ~24 גרם</div>
+        </div>
+        <div class="food-per100">277 קל' | 0g חלבון לתמר</div><div class="food-macros">
+          <div class="food-kcal">66 קל'</div>
+          <div class="food-carb">18g פחמ'</div>
+        </div>
+      </div>
+
+      <div class="food-item carb" data-name="ענבים" data-portion="100 גרם" data-kcal="69" data-p="1" data-c="18" data-f="0" data-cat="carb" data-baseGrams="100" data-step="50" data-min="50" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">ענבים</div>
+          <div class="food-portion">100 גרם</div>
+        </div>
+        <div class="food-per100">69 קל' | 1g חלבון ל-100 גרם</div><div class="food-macros">
+          <div class="food-kcal">69 קל'</div>
+          <div class="food-carb">18g פחמ'</div>
+        </div>
+      </div>
+
+      <div class="food-item carb" data-name="אבטיח" data-portion="100 גרם" data-kcal="30" data-p="1" data-c="8" data-f="0" data-cat="carb" data-baseGrams="100" data-step="100" data-min="100" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">אבטיח</div>
+          <div class="food-portion">100 גרם</div>
+        </div>
+        <div class="food-per100">30 קל' | 1g חלבון ל-100 גרם</div><div class="food-macros">
+          <div class="food-kcal">30 קל'</div>
+          <div class="food-carb">8g פחמ'</div>
+        </div>
+      </div>
+
+      <div class="food-item carb" data-name="לחם מלא" data-portion="פרוסה אחת ~30 גרם" data-kcal="75" data-p="3" data-c="13" data-f="1" data-cat="carb" data-baseGrams="30" data-step="1" data-min="1" data-unit="פרוסה" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">לחם מלא</div>
+          <div class="food-portion">פרוסה אחת ~30 גרם</div>
+        </div>
+        <div class="food-per100">250 קל' | 10g חלבון ל-100 גרם</div><div class="food-macros">
+          <div class="food-kcal">75 קל'</div>
+          <div class="food-carb">13g פחמ'</div>
+        </div>
+      </div>
+
       <div class="food-item carb" data-name="אורז לבן" data-portion="100 גרם מבושל" data-kcal="130" data-p="3" data-c="28" data-f="0" data-cat="carb" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
         <div class="food-check">✓</div>
         <div class="food-info">
@@ -1320,6 +1400,39 @@
       </div>
     </div>
     <div class="food-grid" id="cat-veg">
+
+      <div class="food-item veg" data-name="חציל" data-portion="100 גרם מבושל" data-kcal="25" data-p="1" data-c="6" data-f="0" data-cat="veg" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">חציל</div>
+          <div class="food-portion">100 גרם מבושל</div>
+        </div>
+        <div class="food-per100">25 קל' | 1g חלבון ל-100 גרם</div><div class="food-macros">
+          <div class="food-kcal">25 קל'</div>
+        </div>
+      </div>
+
+      <div class="food-item veg" data-name="קישוא" data-portion="100 גרם" data-kcal="17" data-p="1" data-c="3" data-f="0" data-cat="veg" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">קישוא</div>
+          <div class="food-portion">100 גרם</div>
+        </div>
+        <div class="food-per100">17 קל' | 1g חלבון ל-100 גרם</div><div class="food-macros">
+          <div class="food-kcal">17 קל'</div>
+        </div>
+      </div>
+
+      <div class="food-item veg" data-name="פטריות" data-portion="100 גרם" data-kcal="22" data-p="3" data-c="3" data-f="0" data-cat="veg" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">פטריות</div>
+          <div class="food-portion">100 גרם</div>
+        </div>
+        <div class="food-per100">22 קל' | 3g חלבון ל-100 גרם</div><div class="food-macros">
+          <div class="food-kcal">22 קל'</div>
+        </div>
+      </div>
 
       <div class="food-item veg" data-name="כרוב" data-portion="100 גרם" data-kcal="25" data-p="1" data-c="6" data-f="0" data-cat="veg" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
         <div class="food-check">✓</div>
