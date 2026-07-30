@@ -216,7 +216,6 @@
   .food-name { font-size: 14px; font-weight: 600; }
   .food-portion { font-size: 11px; color: var(--muted); margin-top: 1px; }
 
-  .food-per100 { font-size: 10px; color: var(--muted); margin-bottom: 4px; }
   .food-per100 { font-size: 10px; color: var(--muted); margin-bottom: 4px; text-align: left; width: 100%; order: 3; }
   .food-macros { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
   .food-kcal { font-size: 14px; font-weight: 700; color: var(--text); }
@@ -530,7 +529,7 @@
     </div>
     <div class="food-grid" id="cat-protein">
 
-      <div class="food-item" data-name="חזה עוף" data-portion="100 גרם מבושל" data-kcal="165" data-p="31" data-c="0" data-f="4" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+      <div class="food-item" data-name="חזה עוף" data-portion="100 גרם מבושל" data-kcal="165" data-p="31" data-c="0" data-f="3" data-cat="protein" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
         <div class="food-check">✓</div>
         <div class="food-info">
           <div class="food-name">חזה עוף</div>
@@ -1122,15 +1121,15 @@
         </div>
       </div>
 
-      <div class="food-item carb" data-name="בננה" data-portion="בננה בינונית ~120 גרם" data-kcal="107" data-p="1" data-c="28" data-f="0" data-cat="carb" data-baseGrams="120" data-step="1" data-min="1" data-unit="בננה" onclick="toggleFood(this, event)">
+      <div class="food-item carb" data-name="בננה" data-portion="100 גרם" data-kcal="89" data-p="1" data-c="23" data-f="0" data-cat="carb" data-baseGrams="100" data-step="50" data-min="50" data-unit="גרם" onclick="toggleFood(this, event)">
         <div class="food-check">✓</div>
         <div class="food-info">
           <div class="food-name">בננה</div>
-          <div class="food-portion">בינונית ~120 גרם</div>
+          <div class="food-portion">100 גרם</div>
         </div>
         <div class="food-per100">89 קל' | 1g חלבון ל-100 גרם</div><div class="food-macros">
-          <div class="food-kcal">107 קל'</div>
-          <div class="food-carb">28g פחמ'</div>
+          <div class="food-kcal">89 קל'</div>
+          <div class="food-carb">23g פחמ'</div>
         </div>
       </div>
 
@@ -1322,6 +1321,17 @@
     </div>
     <div class="food-grid" id="cat-veg">
 
+      <div class="food-item veg" data-name="כרוב" data-portion="100 גרם" data-kcal="25" data-p="1" data-c="6" data-f="0" data-cat="veg" data-baseGrams="100" data-step="25" data-min="25" data-unit="גרם" onclick="toggleFood(this, event)">
+        <div class="food-check">✓</div>
+        <div class="food-info">
+          <div class="food-name">כרוב</div>
+          <div class="food-portion">100 גרם</div>
+        </div>
+        <div class="food-per100">25 קל' | 1g חלבון ל-100 גרם</div><div class="food-macros">
+          <div class="food-kcal">25 קל'</div>
+        </div>
+      </div>
+
       <div class="food-item veg" data-name="מלפפון" data-portion="מלפפון שלם ~200 גרם" data-kcal="30" data-p="2" data-c="6" data-f="0" data-cat="veg" data-baseGrams="200" data-step="1" data-min="1" data-unit="מלפפון" onclick="toggleFood(this, event)">
         <div class="food-check">✓</div>
         <div class="food-info">
@@ -1446,7 +1456,6 @@
         step, min, unit, displayUnit, displayFactor
       };
 
-      // Display value: if displayFactor, show count (e.g. 60g / 60 = 1 egg)
       const initDisplayVal = displayFactor ? Math.round(bg / displayFactor) : bg;
 
       const ctrl = document.createElement('div');
@@ -1463,7 +1472,6 @@
       `;
       el.appendChild(ctrl);
 
-      // Fix per100 label for unit-based items (eggs, bananas etc)
       const per100El = el.querySelector('.food-per100');
       if (per100El && unit !== 'גרם') {
         per100El.textContent = `${Math.round(itemState[id].baseKcal)} קל' | ${Math.round(itemState[id].baseP)}g חלבון ל${unit}`;
@@ -1473,7 +1481,6 @@
 
   function getMacros(id) {
     const s = itemState[id];
-    // ratio: how many "base portions" the user has selected
     const ratio = s.baseGrams > 0 ? s.currentGrams / s.baseGrams : 1;
     return {
       kcal: Math.round(s.baseKcal * ratio),
@@ -1513,7 +1520,6 @@
     e.stopPropagation();
     const s = itemState[id];
     applyGrams(id, s.currentGrams + dir * s.step);
-    // sync input with display unit
     const inp = document.getElementById('wc-inp-' + id);
     if (inp) inp.value = s.displayFactor
       ? Math.round(itemState[id].currentGrams / s.displayFactor)
@@ -1550,7 +1556,6 @@
   function toggleFood(el, event) {
     const id = el.dataset.id;
     if (!id) return;
-    // don't toggle if clicking inside the weight control
     if (event && event.target.closest('.weight-ctrl')) return;
     const s = itemState[id];
     const cat = s.cat;
@@ -1602,7 +1607,6 @@
     setBar('prog-c',    'prog-c-num',    totals.c,    TARGET.c,    'carb');
     setBar('prog-f',    'prog-f-num',    totals.f,    TARGET.f,    'fat');
 
-    // Summary
     const list = document.getElementById('summary-list');
     const selected = Object.entries(itemState).filter(([k,v]) => v.selected);
     if (selected.length === 0) {
@@ -1617,7 +1621,6 @@
     }
   }
 
-  // --- Recommended Meals ---
   function applyMeal(names) {
     resetAll();
     names.forEach(name => {
@@ -1638,7 +1641,6 @@
     updateUI();
   }
 
-  // --- Search ---
   function onSearch(q) {
     q = q.trim();
     const clearBtn = document.getElementById('search-clear');
@@ -1652,13 +1654,11 @@
       if (match) anyVisible = true;
     });
 
-    // Show/hide category headers based on whether any items are visible
     document.querySelectorAll('.cat-section').forEach(section => {
       const visibleItems = section.querySelectorAll('.food-item:not([style*="display: none"])');
       section.style.display = visibleItems.length > 0 ? '' : 'none';
     });
 
-    // Show/hide meal summary and rec section when searching
     const summary = document.querySelector('.meal-summary');
     const rec = document.getElementById('rec-section');
     if (summary) summary.style.display = q ? 'none' : '';
@@ -1689,7 +1689,6 @@
   }
 
   function loadState() {
-    // Clear ALL old storage to fix stale values
     try {
       ['foodBuilder', 'foodBuilder_v1', 'foodBuilder_v2', 'foodBuilder_v3', 'foodBuilder_v4', 'foodBuilder_v5', 'foodBuilder_v16'].forEach(k => localStorage.removeItem(k));
     } catch(e) {}
@@ -1701,7 +1700,6 @@
     Object.entries(data).forEach(([id, saved]) => {
       if (!itemState[id]) return;
       const s = itemState[id];
-      // Validate grams: for displayFactor items, must be multiple of step
       const isValid = saved.grams && saved.grams >= s.min &&
         (!s.displayFactor || saved.grams % s.step === 0);
       if (isValid && saved.grams !== s.baseGrams) {
@@ -1729,7 +1727,6 @@
     updateUI();
   }
 
-  // Save after every change
   const _origUpdateUI = updateUI;
   updateUI = function() { _origUpdateUI(); saveState(); };
 
