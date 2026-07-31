@@ -221,6 +221,9 @@
     color: var(--muted);
     letter-spacing: 1px;
     margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
   .rec-scroll {
     display: flex;
@@ -240,11 +243,60 @@
     cursor: pointer;
     transition: all 0.15s;
     -webkit-tap-highlight-color: transparent;
+    position: relative;
   }
   .rec-card:active { transform: scale(0.96); border-color: var(--accent); }
   .rec-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
   .rec-sub { font-size: 11px; color: var(--muted); margin-bottom: 6px; line-height: 1.4; }
   .rec-macros { font-size: 11px; color: var(--accent); font-weight: 600; }
+
+  .rec-del {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #1e1e1e;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .rec-del:active { background: var(--accent4); color: #0a0a0a; }
+
+  .rec-add-card {
+    flex-shrink: 0;
+    width: 110px;
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    padding: 8px;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.15s;
+  }
+  .rec-add-card:active { border-color: var(--accent); color: var(--accent); }
+  .rec-add-plus { font-size: 22px; font-weight: 300; line-height: 1; }
+
+  .my-meals-empty {
+    font-size: 12px;
+    color: var(--muted);
+    padding: 10px 2px;
+  }
 
   /* MEAL SUMMARY */
   .meal-summary {
@@ -259,6 +311,24 @@
   .summary-item { font-size: 13px; color: #ccc; display: flex; align-items: center; gap: 6px; }
   .summary-item::before { content: '✓'; color: var(--accent); font-size: 11px; font-weight: 700; }
   .summary-empty { font-size: 13px; color: var(--muted); font-style: italic; }
+
+  .save-meal-btn {
+    display: block;
+    width: 100%;
+    margin-top: 12px;
+    padding: 10px;
+    background: transparent;
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 700;
+    font-family: 'Heebo', sans-serif;
+    cursor: pointer;
+    text-align: center;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .save-meal-btn:active { background: #14260a; }
 
   /* RESET */
   .reset-btn {
@@ -333,6 +403,74 @@
 
   .wc-unit { font-size: 11px; color: var(--muted); }
   .wc-kcal-live { font-size: 12px; color: var(--accent); font-weight: 700; margin-right: auto; }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 200;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-sheet {
+    width: 100%;
+    max-width: 480px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px 18px 0 0;
+    padding: 20px 18px 24px;
+  }
+  .modal-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .modal-sub { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
+  .modal-input {
+    width: 100%;
+    background: #1a1a1a;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'Heebo', sans-serif;
+    font-size: 15px;
+    padding: 12px 14px;
+    outline: none;
+    direction: rtl;
+    margin-bottom: 14px;
+  }
+  .modal-input:focus { border-color: var(--accent); }
+  .modal-list {
+    max-height: 30vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 14px;
+  }
+  .modal-list-item {
+    font-size: 13px;
+    color: #ccc;
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+  }
+  .modal-list-item span:last-child { color: var(--muted); }
+  .modal-actions { display: flex; gap: 10px; }
+  .modal-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Heebo', sans-serif;
+    cursor: pointer;
+    text-align: center;
+    -webkit-tap-highlight-color: transparent;
+    border: 1px solid var(--border);
+  }
+  .modal-btn.primary { background: var(--accent); color: #0a0a0a; border-color: var(--accent); }
+  .modal-btn.secondary { background: transparent; color: var(--muted); }
+  .modal-btn.primary:active, .modal-btn.secondary:active { opacity: 0.8; }
 </style>
 </head>
 <body>
@@ -401,6 +539,18 @@
     <div class="summary-title">הארוחה שלי היום</div>
     <div class="summary-items" id="summary-list">
       <div class="summary-empty">לא נבחר עדיין...</div>
+    </div>
+    <button class="save-meal-btn" onclick="openSaveMealModal()">💾 שמור את הבחירה כארוחה שלי</button>
+  </div>
+
+  <!-- MY MEALS (custom, user-controlled) -->
+  <div class="rec-section" id="my-meals-section">
+    <div class="rec-title"><span>⭐ הארוחות שלי</span></div>
+    <div class="rec-scroll" id="my-meals-scroll">
+      <div class="rec-add-card" onclick="openSaveMealModal()">
+        <div class="rec-add-plus">+</div>
+        <div>ארוחה חדשה</div>
+      </div>
     </div>
   </div>
 
@@ -1540,6 +1690,20 @@
 
 </div>
 
+<!-- SAVE MEAL MODAL -->
+<div class="modal-overlay" id="save-modal">
+  <div class="modal-sheet">
+    <div class="modal-title">שמירת ארוחה משלי</div>
+    <div class="modal-sub" id="save-modal-sub">תן שם לארוחה — היא תישמר עם הפריטים והכמויות שנבחרו כרגע.</div>
+    <input class="modal-input" id="save-modal-name" type="text" placeholder="לדוגמה: ארוחת בוקר שלי">
+    <div class="modal-list" id="save-modal-list"></div>
+    <div class="modal-actions">
+      <div class="modal-btn secondary" onclick="closeSaveMealModal()">ביטול</div>
+      <div class="modal-btn primary" onclick="confirmSaveMeal()">שמור</div>
+    </div>
+  </div>
+</div>
+
 <script>
   const TARGET = { kcal: 1800, p: 175, c: 165, f: 55 };
   let totals = { kcal: 0, p: 0, c: 0, f: 0 };
@@ -1734,14 +1898,15 @@
     }
   }
 
+  // Recommended / custom meals now ADD to whatever is already selected — they never reset the board.
   function applyMeal(names) {
-    resetAll();
     names.forEach(name => {
-      const el = document.querySelector(`[data-name="${name}"]`);
+      const el = document.querySelector(`[data-name="${CSS.escape(name)}"]`);
       if (!el) return;
       const id = el.dataset.id;
       if (!id || !itemState[id]) return;
       const s = itemState[id];
+      if (s.selected) return; // already on the board — don't double it
       const clsMap = { protein: 'selected', carb: 'selected-2', fat: 'selected-3', veg: 'selected-4' };
       el.classList.add(clsMap[s.cat] || 'selected');
       s.selected = true;
@@ -1750,6 +1915,36 @@
       totals.p    += m.p;
       totals.c    += m.c;
       totals.f    += m.f;
+    });
+    updateUI();
+  }
+
+  // Applies a custom meal, including its saved gram amounts (not just base amounts)
+  function applyCustomMeal(mealId) {
+    const meal = customMeals.find(m => m.id === mealId);
+    if (!meal) return;
+    meal.items.forEach(item => {
+      const el = document.querySelector(`[data-name="${CSS.escape(item.name)}"]`);
+      if (!el) return;
+      const id = el.dataset.id;
+      if (!id || !itemState[id]) return;
+      const s = itemState[id];
+      if (!s.selected) {
+        const clsMap = { protein: 'selected', carb: 'selected-2', fat: 'selected-3', veg: 'selected-4' };
+        el.classList.add(clsMap[s.cat] || 'selected');
+        s.selected = true;
+        totals.kcal -= 0; // placeholder, real add happens after grams set below
+      }
+      // set grams to the saved amount (adds it to totals correctly via applyGrams' selected-aware math)
+      if (s.currentGrams !== item.grams) {
+        applyGrams(id, item.grams);
+      } else if (s.selected) {
+        const m = getMacros(id);
+        totals.kcal += m.kcal;
+        totals.p    += m.p;
+        totals.c    += m.c;
+        totals.f    += m.f;
+      }
     });
     updateUI();
   }
@@ -1774,8 +1969,10 @@
 
     const summary = document.querySelector('.meal-summary');
     const rec = document.getElementById('rec-section');
+    const myMeals = document.getElementById('my-meals-section');
     if (summary) summary.style.display = q ? 'none' : '';
     if (rec) rec.style.display = q ? 'none' : '';
+    if (myMeals) myMeals.style.display = q ? 'none' : '';
 
     document.getElementById('no-results').style.display = (!anyVisible && q) ? 'block' : 'none';
   }
@@ -1788,6 +1985,8 @@
   }
 
   const STORAGE_VERSION = 'v17';
+  const MY_MEALS_KEY = 'foodBuilder_myMeals_v1';
+  let customMeals = [];
 
   function saveState() {
     const data = {};
@@ -1861,9 +2060,119 @@
     updateUI();
   }
 
+  /* ===================== MY MEALS (user-created shortcuts) ===================== */
+
+  function loadCustomMeals() {
+    try {
+      customMeals = JSON.parse(localStorage.getItem(MY_MEALS_KEY)) || [];
+    } catch(e) { customMeals = []; }
+  }
+
+  function saveCustomMeals() {
+    try { localStorage.setItem(MY_MEALS_KEY, JSON.stringify(customMeals)); } catch(e) {}
+  }
+
+  function renderCustomMeals() {
+    const scroll = document.getElementById('my-meals-scroll');
+    const addCardHTML = `
+      <div class="rec-add-card" onclick="openSaveMealModal()">
+        <div class="rec-add-plus">+</div>
+        <div>ארוחה חדשה</div>
+      </div>`;
+
+    if (customMeals.length === 0) {
+      scroll.innerHTML = addCardHTML + `<div class="my-meals-empty">עדיין אין ארוחות שמורות — בחר מאכלים ולחץ "שמור" 👆</div>`;
+      return;
+    }
+
+    const cardsHTML = customMeals.map(meal => {
+      const kcal = meal.items.reduce((sum, it) => sum + (it.kcal || 0), 0);
+      const p = meal.items.reduce((sum, it) => sum + (it.p || 0), 0);
+      const subNames = meal.items.map(it => it.name).join(' · ');
+      return `
+        <div class="rec-card" onclick="applyCustomMeal('${meal.id}')">
+          <div class="rec-del" onclick="deleteCustomMeal(event,'${meal.id}')">✕</div>
+          <div class="rec-name">⭐ ${escapeHtml(meal.name)}</div>
+          <div class="rec-sub">${escapeHtml(subNames)}</div>
+          <div class="rec-macros">~${kcal} קל' · ${p}g חלבון</div>
+        </div>`;
+    }).join('');
+
+    scroll.innerHTML = addCardHTML + cardsHTML;
+  }
+
+  function escapeHtml(str) {
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+  }
+
+  function deleteCustomMeal(event, mealId) {
+    event.stopPropagation();
+    customMeals = customMeals.filter(m => m.id !== mealId);
+    saveCustomMeals();
+    renderCustomMeals();
+  }
+
+  function openSaveMealModal() {
+    const selected = Object.values(itemState).filter(s => s.selected);
+    const listEl = document.getElementById('save-modal-list');
+    const subEl = document.getElementById('save-modal-sub');
+    if (selected.length === 0) {
+      listEl.innerHTML = '';
+      subEl.textContent = 'לא נבחרו מאכלים כרגע — לך תבחר קודם מה שאתה רוצה שיהיה בארוחה, ואז חזור לשמור.';
+      document.getElementById('save-modal-name').style.display = 'none';
+      document.querySelector('#save-modal .modal-btn.primary').style.opacity = '0.4';
+      document.querySelector('#save-modal .modal-btn.primary').onclick = null;
+    } else {
+      subEl.textContent = 'תן שם לארוחה — היא תישמר עם הפריטים והכמויות שנבחרו כרגע.';
+      document.getElementById('save-modal-name').style.display = '';
+      listEl.innerHTML = selected.map(s => {
+        const m = getMacros(Object.keys(itemState).find(k => itemState[k] === s));
+        return `<div class="modal-list-item"><span>${escapeHtml(s.name)}</span><span>${s.currentGrams}${s.unit} · ${m.kcal} קל'</span></div>`;
+      }).join('');
+      document.querySelector('#save-modal .modal-btn.primary').style.opacity = '1';
+      document.querySelector('#save-modal .modal-btn.primary').onclick = confirmSaveMeal;
+    }
+    document.getElementById('save-modal-name').value = '';
+    document.getElementById('save-modal').classList.add('open');
+  }
+
+  function closeSaveMealModal() {
+    document.getElementById('save-modal').classList.remove('open');
+  }
+
+  function confirmSaveMeal() {
+    const nameInput = document.getElementById('save-modal-name');
+    const name = nameInput.value.trim();
+    if (!name) {
+      nameInput.focus();
+      nameInput.style.borderColor = 'var(--accent4)';
+      return;
+    }
+    const selectedEntries = Object.entries(itemState).filter(([k,s]) => s.selected);
+    if (selectedEntries.length === 0) { closeSaveMealModal(); return; }
+
+    const items = selectedEntries.map(([id, s]) => {
+      const m = getMacros(id);
+      return { name: s.name, grams: s.currentGrams, kcal: m.kcal, p: m.p, c: m.c, f: m.f };
+    });
+
+    customMeals.push({
+      id: 'meal_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+      name,
+      items
+    });
+    saveCustomMeals();
+    renderCustomMeals();
+    closeSaveMealModal();
+  }
+
   window.addEventListener('DOMContentLoaded', () => {
     initItems();
     loadState();
+    loadCustomMeals();
+    renderCustomMeals();
   });
 </script>
 </body>
