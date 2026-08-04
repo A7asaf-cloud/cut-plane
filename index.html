@@ -312,6 +312,42 @@
   .summary-item::before { content: '✓'; color: var(--accent); font-size: 11px; font-weight: 700; }
   .summary-empty { font-size: 13px; color: var(--muted); font-style: italic; }
 
+  /* AI SUGGESTION BLOCK (persistent, top) */
+  .ai-result-panel {
+    display: none;
+    background: #1a1200;
+    border: 1px solid var(--accent3);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+  .ai-result-panel.show { display: block; }
+  .ai-result-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent3);
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .ai-result-close {
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: 0;
+    text-transform: none;
+    font-weight: 400;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .ai-result-list { display: flex; flex-direction: column; gap: 6px; }
+  .ai-result-item { font-size: 13px; color: #ddd; }
+  .ai-result-item b { color: var(--text); }
+  .ai-result-item span { color: var(--muted); font-size: 11px; display: block; }
+
   .save-meal-btn {
     display: block;
     width: 100%;
@@ -575,6 +611,15 @@
 <div class="no-results" id="no-results">לא נמצאו תוצאות</div>
 
 <div class="content">
+
+  <!-- AI SUGGESTION RESULT -->
+  <div class="ai-result-panel" id="ai-result-panel">
+    <div class="ai-result-title">
+      <span>🤖 מה ה-AI הוסיף לך</span>
+      <span class="ai-result-close" onclick="document.getElementById('ai-result-panel').classList.remove('show')">✕</span>
+    </div>
+    <div class="ai-result-list" id="ai-result-list"></div>
+  </div>
 
   <!-- MEAL SUMMARY -->
   <div class="meal-summary">
@@ -2122,6 +2167,8 @@
     });
     totals = { kcal: 0, p: 0, c: 0, f: 0 };
     try { localStorage.removeItem('foodBuilder_' + STORAGE_VERSION); } catch(e) {}
+    const aiPanel = document.getElementById('ai-result-panel');
+    if (aiPanel) aiPanel.classList.remove('show');
     updateUI();
   }
 
@@ -2314,6 +2361,7 @@
 
   function applyAISelections(selections) {
     let appliedCount = 0;
+    const report = [];
     selections.forEach(sel => {
       if (!sel || !sel.name) return;
       const el = document.querySelector(`.food-item[data-name="${CSS.escape(sel.name)}"]`);
@@ -2324,13 +2372,50 @@
       let grams = parseFloat(sel.grams);
       if (isNaN(grams) || grams <= 0) return;
       grams = Math.max(s.min, Math.round(grams / s.step) * s.step);
+
+      const wasSelected = s.selected;
+      const beforeGrams = s.currentGrams;
       if (!s.selected) toggleFood(el);
       applyGrams(id, grams);
       appliedCount++;
+
+      const m = getMacros(id);
+      const unitLabel = s.displayFactor ? s.displayUnit : s.unit;
+      const displayGrams = s.displayFactor ? Math.round(grams / s.displayFactor) : grams;
+      report.push({
+        name: s.name,
+        wasSelected,
+        beforeGrams,
+        afterGrams: grams,
+        displayGrams,
+        unitLabel,
+        kcal: m.kcal, p: m.p, c: m.c, f: m.f
+      });
     });
+
+    renderAIResult(report);
+
     if (appliedCount === 0) {
       alert('ה-AI לא הצליח להציע השלמה מתאימה הפעם. אפשר לנסות שוב.');
     }
+  }
+
+  function renderAIResult(report) {
+    const panel = document.getElementById('ai-result-panel');
+    const list = document.getElementById('ai-result-list');
+    if (!report.length) {
+      panel.classList.remove('show');
+      return;
+    }
+    list.innerHTML = report.map(r => {
+      const macroStr = `${r.kcal} קל׳ · ${r.p}g חלבון · ${r.c}g פחמ׳ · ${r.f}g שומן`;
+      if (r.wasSelected) {
+        return `<div class="ai-result-item"><b>${escapeHtml(r.name)}</b> — עודכן ל-${r.displayGrams}${r.unitLabel} <span>(${macroStr})</span></div>`;
+      }
+      return `<div class="ai-result-item">➕ <b>${escapeHtml(r.name)}</b> — ${r.displayGrams}${r.unitLabel} <span>(${macroStr})</span></div>`;
+    }).join('');
+    panel.classList.add('show');
+    panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
   async function runAIComplete() {
